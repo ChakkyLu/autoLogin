@@ -6,6 +6,7 @@ import os
 import time
 
 
+#------------自动登录函数------------------
 def autologin(data):
     flower = 0
     html = "http://passport.66rpg.com/user/login.shtml?fromurl=http%3A%2F%2Fwww.66rpg.com%2Findex&auth_callback=%2F%2Fwww.66rpg.com%2Fsso%2Fauth_callback&app=www&sign=1a217af78f0cceb2464cb9e378c7ede5&login_type=0"
@@ -35,7 +36,6 @@ def autologin(data):
         home_url = browser.find_element_by_xpath("//div[@class='user_pics']/a").get_attribute('href')
         js = 'window.open("'+str(home_url)+'");'
         browser.execute_script(js)
-        all_handles = browser.window_handles
         browser.switch_to_window(browser.window_handles[1])
         flower = browser.find_element_by_xpath("//dl/dd[6]/span[2]/span[1]")
         flower = int(flower.text)
@@ -46,40 +46,36 @@ def autologin(data):
 
 
 
-def main(h, m, initial_flower):
-    data1 = {'username': "18795881901", 'password':"yymm0607"}
-    data2 = {'username': "长安一小夭", 'password':'zzc612250'}
-    b = 1;
+def main(h, m, initial_flower, data):
+    b = 1
     while True:
         while True:
             now = datetime.datetime.now()
             if now.hour == h and now.minute == m and b:
-                flower = autologin(data1)
+                flower = autologin(data)
                 while flower - initial_flower != 3:
-                    flower = autologin(data1)
-                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), data1['username'],"鲜花有 "+str(flower)+" 朵")
+                    flower = autologin(data)
+                print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), data['username'],"鲜花有 "+str(flower)+" 朵")
                 initial_flower += 3
                 b = 0
             if now.hour ==h and now.minute == m+2:
                 b = 1;
-                # flower = autologin(data2)
-                # while flower == 0:
-                #     flower = autologin(data2)
-                # print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), data2['username'],
-                #       "鲜花有 " + str(flower) + " 朵")
-
                 break
-            # else:
-            # time.sleep()
 
 
 if __name__ == "__main__":
-    data1 = {'username': "18795881901", 'password': "yymm0607"}
-    data2 = {'username': "长安一小夭", 'password': 'zzc612250'}
-    initial_flower = 24;
-    # main(8, 30, initial_flower)
-    flower = autologin(data1)
-    # print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), data1['username'], "鲜花有 "+str(flower)+" 朵")
-    # time.sleep(1)
-    # flower = autologin(data2)
-    # print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), data2['username'], "鲜花有 " + str(flower) + " 朵")
+
+#--------------data---------------
+    # username: 填写你自己的username
+    # password：填写你的密码
+    # initial_flower: 你的初始鲜花
+#---------------------------------
+    data = {
+        'username': "USERNAME",
+        'password': "PASSWORD"
+    }
+
+    initial_flower = 24
+    flower = autologin(data)
+    print(data['username'], "鲜花有 " + str(flower) + " 朵")
+
